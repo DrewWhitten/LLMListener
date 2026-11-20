@@ -100,7 +100,8 @@
 
   // ---- state ----
   let state = 'idle';
-  let manualPause = false;
+  let manualPause = !!settings.paused; // "Pause listening" survives a reload of this page
+  let stream = null;                   // the microphone, once it is open
   let reloadWhenIdle = false;
   let launchTimer = null;
   let lastSoundAt = 0;
@@ -114,6 +115,22 @@
     setStatus('listening',
       `Listening offline for "${engine.wakeWord}" and "${engine.continueWord} ${engine.wakeWord}".`,
       `Say “${wakeName()}”`);
+  }
+
+  function showPaused() {
+    setStatus('paused', 'Paused. The microphone is muted and nothing is being listened for.', 'Paused');
+  }
+
+  // While paused by the user the microphone tracks are disabled, so the page receives silence.
+  function setMicMuted(muted) {
+    if (stream) stream.getAudioTracks().forEach((t) => { t.enabled = !muted; });
+  }
+
+  // The same control appears twice: on the home screen and in the details panel.
+  function syncButtons(inConversation) {
+    $('toggle').textContent = inConversation ? 'End conversation' : manualPause ? 'Resume' : 'Pause';
+    $('pauseBtn').textContent = inConversation ? 'End conversation' : manualPause ? 'Resume listening' : 'Pause listening';
+    document.body.classList.toggle('user-paused', manualPause && !inConversation);
   }
 
   function showConversation() {
@@ -156,7 +173,8 @@
   function leaveIdle() {
     engine.pause();
     learnSpeechLevel();
-    $('toggle').textContent = 'End conversation';
+    setMicMuted(false); // the silence timer needs to hear the room during a conversation
+    syncButtons(true);
   }
 
   function beginLaunch(action) {
@@ -186,11 +204,14 @@
     state = 'idle';
     if (reloadWhenIdle) return location.reload();
     engine.flush(); // drop anything half-heard from before the conversation
-    $('toggle').textContent = manualPause ? 'Resume' : 'Pause';
+    syncButtons(false);
+    if (manualPause) {
+      setMicMuted(true);
+      return showPaused();
+    }
     setStatus('paused', 'Conversation over. Resuming…');
     setTimeout(() => {
-      if (state !== 'idle') return;
-      if (manualPause) return setStatus('paused', 'Paused. Not reacting to audio.', 'Paused');
+      if (state !== 'idle' || manualPause) return;
       engine.resume();
       showListening();
     }, RESUME_DELAY_MS);
@@ -283,7 +304,6 @@
   });
 
   // ---- microphone ----
-  let stream;
   try {
     stream = await navigator.mediaDevices.getUserMedia({
       audio: { channelCount: 1, echoCancellation: false, noiseSuppression: true, autoGainControl: true },
@@ -345,11 +365,21 @@
     }
   }
 
-  const startIdle = () => { if (state === 'idle' && !manualPause) showListening(); };
+  if (manualPause) {
+    engine.pause();
+    setMicMuted(true);
+  }
+  syncButtons(false);
+
+  const startIdle = () => {
+    if (state !== 'idle') return;
+    if (manualPause) showPaused();
+    else showListening();
+  };
   if (alreadyActive) {
     joinConversation('a conversation was already open when this page loaded; waiting for it to end');
   } else if (ctx.state === 'running') {
-    showListening();
+    startIdle();
   }
   // Chrome may hold audio until the page has been clicked once.
   if (ctx.state !== 'running') {
@@ -358,21 +388,29 @@
     ctx.resume().then(() => { if (ctx.state === 'running') startIdle(); });
   }
 
-  $('toggle').disabled = false;
-  $('toggle').addEventListener('click', () => {
+  // Pause / resume listening, or end the conversation if one is running.
+  function onPauseButton() {
     if (state !== 'idle') {
-      requestEnd('ended from the listener page');
+      requestEnd('ended from the home screen');
       return;
     }
     manualPause = !manualPause;
+    VLSettings.save({ paused: manualPause });
+    setMicMuted(manualPause);
+    syncButtons(false);
     if (manualPause) {
       engine.pause();
-      $('toggle').textContent = 'Resume';
-      setStatus('paused', 'Paused. Not reacting to audio.', 'Paused');
+      showPaused();
+      addLog('other', 'listening paused');
     } else {
+      engine.flush();
       engine.resume();
-      $('toggle').textContent = 'Pause';
       showListening();
+      addLog('other', 'listening resumed');
     }
-  });
+  }
+  for (const id of ['toggle', 'pauseBtn']) {
+    $(id).disabled = false;
+    $(id).addEventListener('click', onPauseButton);
+  }
 })();

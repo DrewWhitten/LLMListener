@@ -13,6 +13,7 @@
     dimEnabled: true,
     dimStart: '22:00',         // night dimming window, 24-hour local time
     dimEnd: '07:00',
+    paused: false,             // state, not a preference: "Pause listening" on the home screen
   };
 
   const store = typeof chrome !== 'undefined' && chrome.storage ? chrome.storage.local : null;

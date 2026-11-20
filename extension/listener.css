@@ -83,6 +83,9 @@ body.cue.cue-continue #cue { --cue: var(--continue); }
   display: flex; gap: 8px; opacity: .45; transition: opacity .2s;
 }
 #corner:hover, #corner:focus-within { opacity: 1; }
+/* While paused by the user, keep the way back obvious, even when dimmed at night. */
+body.user-paused #corner, body.dim.user-paused #corner { opacity: 1; }
+body.user-paused #pauseBtn { border-color: var(--warn); color: var(--warn); }
 button, #settingsLink {
   font: inherit; font-size: 14px; color: var(--text); text-decoration: none;
   padding: 6px 14px; border-radius: 6px;

@@ -66,7 +66,7 @@
   });
 
   $('reset').addEventListener('click', async () => {
-    settings = { ...DEFAULTS };
+    settings = { ...DEFAULTS, paused: settings.paused }; // leave the home screen's pause alone
     await VLSettings.save(settings);
     render();
     flashSaved();

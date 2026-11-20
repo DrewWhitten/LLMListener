@@ -23,6 +23,8 @@ There are two phrases:
 | *wake word* | Opens a new chat and starts voice mode |
 | continue *wake word* | Reopens the most recent chat it launched and starts voice mode there |
 
+To stop it listening for a while, click **Pause listening** at the bottom right of the clock screen. The microphone is muted until you click **Resume listening**, and the pause survives a reload of the page.
+
 ## Choosing a wake word
 
 The wake word is a setting. The default is `computer`, which works but is a common word, so ordinary conversation or a TV will set it off now and then. Pick something distinctive that you would not say by accident.

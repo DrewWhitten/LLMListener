@@ -97,6 +97,22 @@
   await until(() => status().startsWith('Listening'), 20000, 'listening');
   await sleep(1000);
 
+  // 0. Pause listening from the home screen: the wake word does nothing until resumed.
+  const pauseBtn = document.getElementById('pauseBtn');
+  check('home screen has an enabled Pause listening button', !pauseBtn.disabled && pauseBtn.textContent === 'Pause listening');
+  pauseBtn.click();
+  await sleep(300);
+  check('pausing shows Paused and offers Resume listening',
+    status().startsWith('Paused') && pauseBtn.textContent === 'Resume listening' && document.getElementById('pillText').textContent === 'Paused');
+  check('pause is remembered for a page reload', stored.paused === true);
+  await play('skippy.microsoftziradesktop');
+  await sleep(2500);
+  check('wake word while paused does nothing', wakes().length === 0);
+  pauseBtn.click();
+  await until(() => status().startsWith('Listening'), 3000, 'resume from pause');
+  check('resuming goes back to listening', status().startsWith('Listening') && pauseBtn.textContent === 'Pause listening' && stored.paused === false);
+  await sleep(1000);
+
   // 1. "Skippy" launches a new chat; silence ends it; listening resumes.
   await play('skippy.microsoftziradesktop');
   await until(() => wakes().length === 1, 5000, 'wake');
@@ -148,7 +164,7 @@
   document.getElementById('toggle').click();
   await until(() => status().startsWith('Listening'), 5000, 'recover');
   check('listener recovers when the background has lost the session', status().startsWith('Listening'));
-  check('button reads Pause again', document.getElementById('toggle').textContent === 'Pause');
+  check('button reads Pause again', document.getElementById('toggle').textContent === 'Pause' && pauseBtn.textContent === 'Pause listening');
 
   // 5. One session at a time: the background says a conversation is already open. The listener
   //    must join it (not listen), ignore further wake words, and resume once it ends.
