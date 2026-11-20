@@ -6,7 +6,7 @@ A hands-free listening device for LLMs. Say a wake word and a voice conversation
 
 LLMListener is a Chrome extension that turns a spare Chromebook or PC into a hands-free voice device. It shows a clock, listens offline for a wake word of your choosing, and when it hears it, opens claude.ai and starts voice mode for you. When the conversation ends it goes back to the clock.
 
-It was inspired by hey-claude-phone, an unofficial Android project that does the same job on an old phone.
+It was inspired by [hey-claude-phone](https://github.com/magiak/hey-claude-phone), an unofficial Android project that does the same job on an old phone.
 
 ## How it behaves
 
