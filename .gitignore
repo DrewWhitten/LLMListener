@@ -7,6 +7,9 @@ tools/wav/
 
 __pycache__/
 
+# Lock files Microsoft Word leaves beside a document it has open
+~$*
+
 # Local editor/assistant configuration
 .claude/
 
