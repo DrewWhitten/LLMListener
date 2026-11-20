@@ -34,18 +34,29 @@ Constraints:
 
 ## Install
 
-Works on a Chromebook or any PC running Chrome 116 or newer. The one-time setup step needs Python 3; on a Chromebook, run it on another computer and copy the `extension` folder across.
+Works on a Chromebook or any PC running Chrome 116 or newer.
 
-1. Fetch the speech engine and model (about 46 MB, not kept in this repository):
+### From the release zip (easiest)
+
+1. Download the zip from the [latest release](https://github.com/DrewWhitten/LLMListener/releases/latest) and unzip it somewhere permanent. Chrome loads the extension from that folder every time it starts, so don't move or delete it afterwards.
+2. Open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked** and choose the unzipped folder (the one containing `manifest.json`).
+3. Sign in to claude.ai in the same Chrome profile and set its microphone permission to **Allow**.
+4. The home screen opens by itself. Allow the microphone when asked. The first load takes a few seconds while the model is unpacked and cached.
+5. Open **Settings** (bottom right of the home screen) and choose your wake word.
+
+### From source
+
+This needs Python 3 for a one-time setup step.
+
+1. Clone this repository, then fetch the speech engine and model (about 46 MB, not kept in the repository):
 
    ```
    python tools/fetch_vendor.py
    ```
 
-2. Open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked** and choose the `extension` folder.
-3. Sign in to claude.ai in the same Chrome profile and set its microphone permission to **Allow**.
-4. The home screen opens by itself. Allow the microphone when asked. The first load takes a few seconds while the model is unpacked and cached.
-5. Open **Settings** (bottom right of the home screen) and choose your wake word.
+2. In `chrome://extensions`, click **Load unpacked** and choose the `extension` folder. Then continue from step 3 above.
+
+To build the release zip yourself, run `python tools/build_release.py`.
 
 ### As a bedside device (Chromebook or PC)
 
