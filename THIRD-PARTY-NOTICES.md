@@ -44,4 +44,13 @@ The vosk-browser bundle itself embeds further components (including Kaldi, OpenF
 
 The setup step modifies one of these files locally: `extension/vendor/vosk-worker.js` is extracted from `vosk.js` and three functions are replaced so that it runs under a Chrome extension's Content-Security-Policy.
 
-**If you redistribute those files** (by committing them, attaching a packaged build to a release, or publishing to an extension store), the Apache License 2.0 requires you to include the license text, keep the upstream notices, and state that `vosk-worker.js` was modified, and the embedded components' notices should be carried too.
+## Packaged releases
+
+A release zip built by `tools/build_release.py` does include those files, so it redistributes them. To meet their license terms, every release zip carries:
+
+- `LICENSE`: the Apache License 2.0 text
+- `NOTICE`: this project's notice followed by vosk-browser's own NOTICE file
+- `MODIFICATIONS.txt`: a statement of what was changed in the third-party files
+- `third_party_licenses/`: the license and notice files of vosk-browser and of each component compiled into it, with an index in `third_party_licenses/README.md`
+
+**If you redistribute those files yourself** (in a fork's release, or by publishing to an extension store), keep all of the above with them.

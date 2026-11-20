@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "LLMListener",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "A hands-free listening device for LLMs. Say a wake word to start a voice conversation. Works with Claude; unofficial.",
   "options_ui": { "page": "options.html", "open_in_tab": true },
   "content_security_policy": {
