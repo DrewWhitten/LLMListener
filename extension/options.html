@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLMListener settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>LLMListener settings</h1>
+      <span id="saved" role="status" aria-live="polite"></span>
+    </header>
+    <p class="lede">Changes are saved as you make them and apply to the home screen straight away.</p>
+
+    <section>
+      <h2>Wake phrases</h2>
+      <div class="field">
+        <label for="wakeWord">Wake word</label>
+        <input id="wakeWord" type="text" autocomplete="off" spellcheck="false">
+        <p class="hint">Starts a new chat. Use one English word the offline speech model knows; an unknown word will simply never trigger. A distinctive word works best: a common one will be set off by ordinary conversation or the TV.</p>
+      </div>
+      <div class="field">
+        <label for="continueWord">Continue word</label>
+        <input id="continueWord" type="text" autocomplete="off" spellcheck="false">
+        <p class="hint">Said just before the wake word, it reopens the most recent chat. <span id="phrases"></span></p>
+      </div>
+      <div class="field">
+        <label for="threshold">Sensitivity threshold <output id="thresholdValue"></output></label>
+        <input id="threshold" type="range" min="0" max="1" step="0.05">
+        <p class="hint">How confident the recognizer must be. Lower triggers more easily and risks more false triggers.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Conversation</h2>
+      <div class="field">
+        <label for="silenceTimeoutSec">Return to the clock after silence of</label>
+        <select id="silenceTimeoutSec">
+          <option value="15">15 seconds</option>
+          <option value="30">30 seconds</option>
+          <option value="60">1 minute</option>
+          <option value="120">2 minutes</option>
+          <option value="300">5 minutes</option>
+        </select>
+        <p class="hint">Silence means neither you nor Claude is making sound. The conversation also ends when voice mode is stopped on Claude's page.</p>
+      </div>
+      <div class="field">
+        <label for="voiceButtonLabel">Voice button label</label>
+        <input id="voiceButtonLabel" type="text" autocomplete="off" spellcheck="false">
+        <p class="hint">Part of the name of the button on claude.ai that starts voice mode. Change it here if Claude's interface renames the button.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Chime</h2>
+      <div class="field inline">
+        <input id="chimeEnabled" type="checkbox">
+        <label for="chimeEnabled">Play a chime when the wake word is heard</label>
+      </div>
+      <div class="field">
+        <label for="chimeVolume">Volume <output id="chimeVolumeValue"></output></label>
+        <div class="with-button">
+          <input id="chimeVolume" type="range" min="0" max="1" step="0.05">
+          <button id="testChime" type="button">Test</button>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Night dimming</h2>
+      <div class="field inline">
+        <input id="dimEnabled" type="checkbox">
+        <label for="dimEnabled">Dim the home screen at night</label>
+      </div>
+      <div class="field times">
+        <label for="dimStart">From</label>
+        <input id="dimStart" type="time">
+        <label for="dimEnd">until</label>
+        <input id="dimEnd" type="time">
+      </div>
+    </section>
+
+    <footer>
+      <button id="reset" type="button">Restore defaults</button>
+    </footer>
+  </main>
+
+  <script src="settings.js"></script>
+  <script src="chime.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

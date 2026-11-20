@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "LLMListener",
+  "version": "0.4.0",
+  "description": "A hands-free listening device for LLMs. Say a wake word to start a voice conversation. Works with Claude; unofficial.",
+  "options_ui": { "page": "options.html", "open_in_tab": true },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  },
+  "permissions": ["storage"],
+  "host_permissions": ["https://claude.ai/*"],
+  "background": { "service_worker": "background.js" },
+  "action": { "default_title": "LLMListener: open the home screen" },
+  "content_scripts": [
+    {
+      "matches": ["https://claude.ai/*"],
+      "js": ["mic-hook.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["https://claude.ai/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "commands": {
+    "launch-script": {
+      "suggested_key": { "default": "Ctrl+Shift+1" },
+      "description": "Start a new voice chat without speaking (for testing)"
+    }
+  }
+}

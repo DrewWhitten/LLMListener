@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLMListener</title>
+  <link rel="stylesheet" href="listener.css">
+</head>
+<body data-state="loading">
+  <!-- Home screen: clock and a one-line state. Click the clock for full screen. -->
+  <div id="home">
+    <div id="clock" title="Click for full screen">
+      <div id="time">--:--</div>
+      <div id="date"></div>
+    </div>
+    <div id="pill"><span class="dot"></span><span id="pillText">Starting…</span></div>
+  </div>
+
+  <!-- Shown for a moment when the wake word is heard. -->
+  <div id="cue" aria-hidden="true">
+    <div class="ring"></div>
+    <div id="cueText">Yes?</div>
+  </div>
+
+  <nav id="corner">
+    <button id="detailsBtn" type="button">Details</button>
+    <a id="settingsLink" href="options.html" target="_blank" rel="noopener">Settings</a>
+  </nav>
+
+  <!-- Diagnostics: what the engine hears, and why conversations start and end. -->
+  <main id="details" hidden>
+    <div class="row head">
+      <h1>LLMListener <span class="tag">details</span></h1>
+      <button id="closeDetails" type="button">Close</button>
+    </div>
+
+    <div id="status" class="status loading">Loading speech model…</div>
+
+    <div class="row">
+      <div class="meter" aria-label="Microphone level"><div id="level"></div></div>
+      <button id="toggle" type="button" disabled>Pause</button>
+    </div>
+
+    <p class="heard">Hearing: <span id="partial">—</span></p>
+
+    <div class="row">
+      <label>Sensitivity threshold
+        <input id="threshold" type="range" min="0" max="1" step="0.05" value="0.5">
+        <output id="thresholdValue">0.50</output>
+      </label>
+      <span class="hint">Lower triggers more easily. Each detection below shows its confidence.</span>
+    </div>
+
+    <h2>Log <span id="counts" class="tag"></span></h2>
+    <ol id="log" reversed></ol>
+  </main>
+
+  <script src="vendor/vosk.js"></script>
+  <script src="settings.js"></script>
+  <script src="chime.js"></script>
+  <script src="wake.js"></script>
+  <script src="listener.js"></script>
+</body>
+</html>
